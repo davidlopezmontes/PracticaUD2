@@ -1,6 +1,8 @@
 
 /** Descripción Programa: Programa CineDAW: taquilla de una sala de cine. @author david.lopezmontes  */
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class CineDAW {
     static void main(String[] args) {
@@ -12,6 +14,9 @@ public class CineDAW {
         final int TARIFA_GENERAL = 850;
         final int SUPLEMENTO = 150;
         final int DESCUENTO = 300;
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+        boolean correcto = false;
 
         //Muestra los importes con formato de euros (420 se muestra como 4,20 €): calcula los euros con / y los céntimos
         //con %, y usa el operador ternario para añadir un 0 delante de los céntimos cuando haga falta.
@@ -28,12 +33,43 @@ public class CineDAW {
         System.out.println("butacas: " + sala + " contador: " + contador);
 
         //mostrar menú
-        System.out.println("===== CineDAW =====");
-        System.out.println("1. Ver sala");
-        System.out.println("2. Comprar entrada");
-        System.out.println("3. Estadísticas");
-        System.out.println("0. Salir");
-        System.out.println("Elige una opción:");
+        String menu = """
+                ===== CineDAW =====
+                1. Ver sala
+                2. Comprar entrada
+                3. Estadísticas
+                0. Salir
+                Elige una opción:
+                """;
+
+        //bucle do-while para el menú
+        do {
+            System.out.print(menu);
+            try {
+                opcion = sc.nextInt();
+                correcto = true;
+                sc.nextLine();
+            } catch (InputMismatchException e){
+                System.out.println("Introduce el número de la opción que desea");
+            }
+
+
+            switch (correcto) {
+                case opcion == 1:
+                    System.out.println("Esta es la sala:");
+                    break;
+                case 2:
+                    System.out.println("Aquí puede comprar su entrada:");
+                case 3:
+                    System.out.println("Estadísticas:");
+                case 4:
+                    System.out.println("Saliendo de la aplicación...");
+            }
+        }
+        while(opcion != 0);
+
+        sc.close();
+
 
 
         //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
