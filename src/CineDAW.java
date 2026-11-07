@@ -16,21 +16,32 @@ public class CineDAW {
         final int DESCUENTO = 300;
         Scanner sc = new Scanner(System.in);
         int opcion;
-        boolean correcto = false;
+        boolean salir = false;
 
         //Muestra los importes con formato de euros (420 se muestra como 4,20 €): calcula los euros con / y los céntimos
         //con %, y usa el operador ternario para añadir un 0 delante de los céntimos cuando haga falta.
-        System.out.println("suplemento: " + (SUPLEMENTO/100) + "," + (SUPLEMENTO%100 < 10 ? "0" + SUPLEMENTO%100 : SUPLEMENTO%100));
+        System.out.println("suplemento: " + (SUPLEMENTO / 100) + "," + (SUPLEMENTO % 100 < 10 ? "0" + SUPLEMENTO % 100 : SUPLEMENTO % 100));
 
         String sala = "";
         int contador = 0;
 
         //construir string añadiendo - con bucle for
-        for(int i = 0; i<TOTAL_BUTACAS; i++){
+        for (int i = 0; i < TOTAL_BUTACAS; i++) {
             sala = sala.concat("-");
             contador += 1; //para comprobar si son 48
         }
         System.out.println("butacas: " + sala + " contador: " + contador);
+
+        //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
+        //final boolean OCUPADA = sala.charAt(posicion) == 'X';
+        //final boolean LIBRE = sala.charAt(posicion) == '-';
+        //sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1);
+
+        // Posición de una butaca dentro del String: A1 -> 0, A2 -> 1 ... F8 -> 47
+        //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
+        //boolean ocupada = sala.charAt(posicion) == 'X'; // consultar
+        //sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1); // ocupar
+
 
         //mostrar menú
         String menu = """
@@ -43,44 +54,38 @@ public class CineDAW {
                 """;
 
         //bucle do-while para el menú
+        //parse int (no se pq)
         do {
             System.out.print(menu);
             try {
                 opcion = sc.nextInt();
-                correcto = true;
                 sc.nextLine();
-            } catch (InputMismatchException e){
-                System.out.println("Introduce el número de la opción que desea");
-            }
 
+                switch (opcion) {
+                    case 1:
+                        System.out.println("Esta es la sala:");
 
-            switch (correcto) {
-                case opcion == 1:
-                    System.out.println("Esta es la sala:");
-                    break;
-                case 2:
-                    System.out.println("Aquí puede comprar su entrada:");
-                case 3:
-                    System.out.println("Estadísticas:");
-                case 4:
-                    System.out.println("Saliendo de la aplicación...");
+                        break;
+                    case 2:
+                        System.out.println("Aquí puede comprar su entrada");
+                        break;
+                    case 3:
+                        System.out.println("Estadísticas:");
+                        break;
+                    case 0:
+                        System.out.println("Saliendo de la aplicación...");
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Opción no válida");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Opción no válida");
+                sc.nextLine();
             }
-        }
-        while(opcion != 0);
+        }while (!salir);
 
         sc.close();
-
-
-
-        //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
-        //final boolean OCUPADA = sala.charAt(posicion) == 'X';
-        //final boolean LIBRE = sala.charAt(posicion) == '-';
-        //sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1);
-
-        // Posición de una butaca dentro del String: A1 -> 0, A2 -> 1 ... F8 -> 47
-        //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
-        //boolean ocupada = sala.charAt(posicion) == 'X'; // consultar
-        //sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1); // ocupar
 
     }
 }
