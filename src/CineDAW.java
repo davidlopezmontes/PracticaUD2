@@ -17,6 +17,8 @@ public class CineDAW {
         Scanner sc = new Scanner(System.in);
         int opcion;
         boolean salir = false;
+        int recaudacion = 0;
+        int entradasVendidas = 0;
 
         //Muestra los importes con formato de euros (420 se muestra como 4,20 €): calcula los euros con / y los céntimos
         //con %, y usa el operador ternario para añadir un 0 delante de los céntimos cuando haga falta.
@@ -142,17 +144,15 @@ public class CineDAW {
                                 }
                             }
 
-                            if (edad >= 0 && edad <= 120) {
-                                if (edad < 12) {
-                                    precioTotal = TARIFA_INTANTIL;
-                                    System.out.println("Tarifa infantil");
-                                } else if (edad >= 65) {
-                                    precioTotal = TARIFA_SENIOR;
-                                    System.out.println("Tarifa senior");
-                                } else {
-                                    precioTotal = TARIFA_GENERAL;
-                                    System.out.println("Tarifa general");
-                                }
+                            if (edad < 12) {
+                                precioTotal = TARIFA_INTANTIL;
+                                System.out.println("Tarifa infantil");
+                            } else if (edad >= 65) {
+                                precioTotal = TARIFA_SENIOR;
+                                System.out.println("Tarifa senior");
+                            } else {
+                                precioTotal = TARIFA_GENERAL;
+                                System.out.println("Tarifa general");
                             }
 
                             int dia = 0;
@@ -180,11 +180,29 @@ public class CineDAW {
                                     System.out.println("Número de día no válido");
                             }
                             System.out.println("Precio: " + (precioTotal/ 100) + "," + (precioTotal % 100 < 10 ? "0" + precioTotal % 100 : precioTotal % 100) + " €");
-
+                            entradasVendidas++;
+                            recaudacion += precioTotal;
                         }
                         break;
                     case 3:
                         System.out.println("Estadísticas:");
+                        System.out.println("Entradas vendidas: " + (entradasVendidas == 1 ?  entradasVendidas + " entrada." : entradasVendidas + " entradas."));
+                        System.out.println("Recaudación: " + (recaudacion/ 100) + "," + (recaudacion % 100 < 10 ? "0" + recaudacion % 100 : recaudacion % 100) + " €");
+                        int butacasOcupadas = 0;
+                        int butacasLibres = 0;
+                        for (int i = 0; i < TOTAL_BUTACAS; i++){
+                            if (sala.charAt(i) == 'X'){
+                                butacasOcupadas++;
+                            }
+                            else{
+                                butacasLibres++;
+                            }
+                        }
+                        System.out.println("Butacas ocupadas: " + butacasOcupadas + " |" + " libres: " + butacasLibres);
+
+                        double ocupacion = (double) butacasOcupadas/TOTAL_BUTACAS * 100;
+                        int centesimas = (int) Math.round(ocupacion * 100);
+                        System.out.println("Ocupación: " + (centesimas/ 100) + "," + (centesimas % 100 < 10 ? "0" + centesimas % 100 : centesimas % 100) + " %");
                         break;
                     case 0:
                         System.out.println("Saliendo de la aplicación...");
