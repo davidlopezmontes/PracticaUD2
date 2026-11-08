@@ -30,18 +30,6 @@ public class CineDAW {
             sala = sala.concat("-");
             contador += 1; //para comprobar si son 48
         }
-        System.out.println("butacas: " + sala + " contador: " + contador);
-
-        //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
-        //final boolean OCUPADA = sala.charAt(posicion) == 'X';
-        //final boolean LIBRE = sala.charAt(posicion) == '-';
-        //sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1);
-
-        // Posición de una butaca dentro del String: A1 -> 0, A2 -> 1 ... F8 -> 47
-        //int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
-        //boolean ocupada = sala.charAt(posicion) == 'X'; // consultar
-        //sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1); // ocupar
-
 
         //mostrar menú
         String menu = """
@@ -69,19 +57,131 @@ public class CineDAW {
                         System.out.println("  1 2 3 4     5 6 7 8");
                         for(int fila = 'A'; fila <= 'F'; fila++ ){
                                 System.out.print(Character.toString(fila) + " ");
-                                String linea = "";
-                                for(int columna = 0; columna < 8; columna++){
-                                    linea = linea + '-' + " ";
-                                    if (columna == 3)
-                                        linea = linea + "    ";
+                                for(int butaca = 1; butaca <= BUTACAS_POR_FILA; butaca++){
+                                    int posicion = (fila - 'A') * BUTACAS_POR_FILA + (butaca - 1);
+                                    System.out.print(sala.charAt(posicion) + " ");
+                                    if (butaca == 4)
+                                        System.out.print("    ");
                                 }
-                                System.out.println(linea);
+                                System.out.println();
                         }
                         System.out.println("(- libre, X ocupada)");
                         System.out.println();
                         break;
                     case 2:
-                        System.out.println("Aquí puede comprar su entrada");
+                        //si no encuentra ningún '-' la sala está llena.
+                        if (sala.indexOf('-') == -1){
+                            System.out.println("La sala está completa");
+                        }
+                        else {
+                            System.out.println("Aquí puede comprar su entrada");
+                            String fila = "";
+                            boolean valida = false;
+                            while(!valida){
+                                System.out.println("Introduce una fila (A, B, C, D, E, F)");
+                                fila = sc.nextLine();
+                                fila = fila.trim();
+                                fila = fila.toUpperCase();
+                                if (fila.length() == 1 && fila.charAt(0) >= 'A' && fila.charAt(0) <= 'F'){
+                                    valida = true;
+                                }
+                                else{
+                                    System.out.println("Error: La fila debe ser A, B, C, D, E o F)");
+                                }
+                            }
+                            boolean numeroValido = false;
+                            int butaca = 0;
+                            do{
+                                try {
+                                    System.out.println("Introduce el número de butaca (1-8):");
+                                    butaca = sc.nextInt();
+                                    sc.nextLine();
+
+                                    if(butaca >= 1 && butaca <= 8){
+                                        numeroValido = true;
+                                    }
+                                    else{
+                                        System.out.println("El número de butaca tiene que estar entre 1 y 8");
+                                    }
+                                }
+                                catch(InputMismatchException e){
+                                    System.out.println("Opción no válida");
+                                    sc.nextLine();
+                                }
+                            } while(!numeroValido);
+
+                            int posicion = (fila.charAt(0) - 'A') * BUTACAS_POR_FILA + (butaca - 1);
+                            final boolean OCUPADA = sala.charAt(posicion) == 'X';
+                            final boolean LIBRE = sala.charAt(posicion) == '-';
+                            if (OCUPADA){
+                                System.out.println("La butaca " + fila + butaca + " está ocupada");
+                            }
+                            if (LIBRE){
+                                sala = sala.substring(0, posicion) + 'X' + sala.substring(posicion + 1);
+                                System.out.println("Has reservado la butaca " + fila + butaca);
+                            }
+
+                            int edad = 0;
+                            boolean edadValida = false;
+                            int precioTotal = 0;
+
+                            while (!edadValida) {
+                                System.out.println("Introduce tu edad: ");
+                                try {
+                                    edad = sc.nextInt();
+                                    sc.nextLine();
+                                    if (edad>=0&& edad<=120){
+                                        edadValida = true;
+                                    }
+                                    else{
+                                        System.out.println("La edad debe estar entre 0 y 120 años");
+                                    }
+                                }catch (InputMismatchException e){
+                                    System.out.println("Introduce un número");
+                                    sc.nextLine();
+                                }
+                            }
+
+                            if (edad >= 0 && edad <= 120) {
+                                if (edad < 12) {
+                                    precioTotal = TARIFA_INTANTIL;
+                                    System.out.println("Tarifa infantil");
+                                } else if (edad >= 65) {
+                                    precioTotal = TARIFA_SENIOR;
+                                    System.out.println("Tarifa senior");
+                                } else {
+                                    precioTotal = TARIFA_GENERAL;
+                                    System.out.println("Tarifa general");
+                                }
+                            }
+
+                            int dia = 0;
+                            System.out.println("Introduce el día de la semana(1 = lunes... 7 = domingo)");
+                            dia = sc.nextInt();
+                            sc.nextLine();
+                            switch (dia){
+                                case 1:
+                                case 2:
+                                case 4:
+                                case 5:
+                                    System.out.println("Precio general");
+                                    break;
+                                case 3:
+                                    System.out.println("Es el día del espectador tiene un descuento del 30%");
+                                    int descuento = (int) Math.round(precioTotal * DESCUENTO/1000.0);
+                                    precioTotal = precioTotal - descuento;
+                                    break;
+                                case 6:
+                                case 7:
+                                    System.out.println("Precio fin de semana");
+                                    precioTotal = precioTotal + SUPLEMENTO;
+                                    break;
+                                default:
+                                    System.out.println("Número de día no válido");
+                            }
+                            System.out.println("Precio: " + (precioTotal/ 100) + "," + (precioTotal % 100 < 10 ? "0" + precioTotal % 100 : precioTotal % 100) + " €");
+
+                        }
                         break;
                     case 3:
                         System.out.println("Estadísticas:");
