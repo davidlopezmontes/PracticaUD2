@@ -63,8 +63,22 @@ public class CineDAW {
 
                 switch (opcion) {
                     case 1:
-                        System.out.println("Esta es la sala:");
-
+                        System.out.println();
+                        System.out.println("Distribución de la sala:");
+                        System.out.println("      P A N T A L L A");
+                        System.out.println("  1 2 3 4     5 6 7 8");
+                        for(int fila = 'A'; fila <= 'F'; fila++ ){
+                                System.out.print(Character.toString(fila) + " ");
+                                String linea = "";
+                                for(int columna = 0; columna < 8; columna++){
+                                    linea = linea + '-' + " ";
+                                    if (columna == 3)
+                                        linea = linea + "    ";
+                                }
+                                System.out.println(linea);
+                        }
+                        System.out.println("(- libre, X ocupada)");
+                        System.out.println();
                         break;
                     case 2:
                         System.out.println("Aquí puede comprar su entrada");
